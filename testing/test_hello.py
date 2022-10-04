@@ -6,4 +6,5 @@ def test_hello():
     """Tests for `hello()`"""
     assert hello() == "Hello John!"
     assert hello("Jill") == "Hello Jill!"
-    assert type(hello()) == str
+    assert hello(name="Jill") == "Hello Jill!"
+    assert isinstance(hello(), str)
