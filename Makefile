@@ -1,4 +1,5 @@
 install:
+	./add_github_hooks.sh
 	pip install --upgrade pip &&\
 	pip install -r requirements.txt
 
