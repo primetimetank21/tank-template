@@ -1,6 +1,6 @@
-def hello(name="John"):
+def hello(name:str="John") -> str:
     """Say hello to `name`"""
-    phrase = f"Hello {name}!"
+    phrase:str = f"Hello {name}!"
     print(phrase)
     return phrase
 
