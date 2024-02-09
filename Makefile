@@ -45,12 +45,20 @@ lint: venv
 	$(RUFF) check $(ALL_PYTHON_FILES)
 	$(MYPY) $(ALL_PYTHON_FILES)
 
+# Check type-hints
+.PHONY: type-check
 type-check: venv
 	@ $(MYPY) $(ALL_PYTHON_FILES)
 
 # Verify code behavior
+.PHONY: test
 test: venv
 	@ $(PYTEST) -vv --cov-report term-missing --cov=. testing/
+
+# Clean up and remove cache files
+.PHONY: clean
+clean:
+	find . -type f -name "*.py[co]" -delete -o -type d -name "__pycache__" -delete
 
 # Execute all steps
 .PHONY: all
