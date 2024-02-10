@@ -6,6 +6,7 @@ def hello(name: str = "John") -> str:
 
 
 def main() -> None:
+    """Code Entrypoint"""
     if __name__ == "__main__":
         hello()
 
