@@ -1,8 +1,12 @@
-PIP = .venv/bin/pip
-PYTHON = .venv/bin/python
-RUFF = .venv/bin/ruff
-MYPY = .venv/bin/mypy
-PYTEST = .venv/bin/pytest
+.DEFAULT_GOAL := all
+
+# Variables
+VENV_NAME = .venv
+PIP = $(VENV_NAME)/bin/pip
+PYTHON = $(VENV_NAME)/bin/python
+RUFF = $(VENV_NAME)/bin/ruff
+MYPY = $(VENV_NAME)/bin/mypy
+PYTEST = $(VENV_NAME)/bin/pytest
 MUTE_OUTPUT = 1>/dev/null
 ALL_PYTHON_FILES := $$(git ls-files "*.py")
 ALL_iPYTHON_FILES := $$(git ls-files "*.ipynb")
@@ -18,15 +22,20 @@ install: requirements.txt
 # Create/Activate env; install dependencies
 .PHONY: venv/bin/activate
 venv/bin/activate: requirements.txt
-	@ python3 -m venv .venv && \
-	chmod +x .venv/bin/activate && \
-	. ./.venv/bin/activate
+	@ python3 -m venv $(VENV_NAME) && \
+	chmod +x $(VENV_NAME)/bin/activate && \
+	. ./$(VENV_NAME)/bin/activate
 	@ make install -s
 
 # Activate env
 .PHONY: venv
 venv: venv/bin/activate
-	@ . ./.venv/bin/activate
+	@ . ./$(VENV_NAME)/bin/activate
+
+# Delete env
+.PHONY: delete_venv
+delete_venv:
+	@ rm -rf $(VENV_NAME)
 
 # Run main script (remove if not needed)
 .PHONY: run 
