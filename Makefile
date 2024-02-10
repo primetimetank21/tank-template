@@ -1,8 +1,12 @@
-PIP = .venv/bin/pip
-PYTHON = .venv/bin/python
-RUFF = .venv/bin/ruff
-MYPY = .venv/bin/mypy
-PYTEST = .venv/bin/pytest
+.DEFAULT_GOAL := all
+
+# Variables
+VENV_NAME = .venv
+PIP = $(VENV_NAME)/bin/pip
+PYTHON = $(VENV_NAME)/bin/python
+RUFF = $(VENV_NAME)/bin/ruff
+MYPY = $(VENV_NAME)/bin/mypy
+PYTEST = $(VENV_NAME)/bin/pytest
 MUTE_OUTPUT = 1>/dev/null
 ALL_PYTHON_FILES := $$(git ls-files "*.py")
 ALL_iPYTHON_FILES := $$(git ls-files "*.ipynb")
@@ -18,15 +22,20 @@ install: requirements.txt
 # Create/Activate env; install dependencies
 .PHONY: venv/bin/activate
 venv/bin/activate: requirements.txt
-	@ python3 -m venv .venv && \
-	chmod +x .venv/bin/activate && \
-	. ./.venv/bin/activate
+	@ python3 -m venv $(VENV_NAME) && \
+	chmod +x $(VENV_NAME)/bin/activate && \
+	. ./$(VENV_NAME)/bin/activate
 	@ make install -s
 
 # Activate env
 .PHONY: venv
 venv: venv/bin/activate
-	@ . ./.venv/bin/activate
+	@ . ./$(VENV_NAME)/bin/activate
+
+# Delete env
+.PHONY: delete_venv
+delete_venv:
+	@ rm -rf $(VENV_NAME)
 
 # Run main script (remove if not needed)
 .PHONY: run 
@@ -45,12 +54,20 @@ lint: venv
 	$(RUFF) check $(ALL_PYTHON_FILES)
 	$(MYPY) $(ALL_PYTHON_FILES)
 
+# Check type-hints
+.PHONY: type-check
 type-check: venv
 	@ $(MYPY) $(ALL_PYTHON_FILES)
 
 # Verify code behavior
+.PHONY: test
 test: venv
 	@ $(PYTEST) -vv --cov-report term-missing --cov=. testing/
+
+# Clean up and remove cache files
+.PHONY: clean
+clean:
+	find . -type f -name "*.py[co]" -delete -o -type d -name "__pycache__" -delete
 
 # Execute all steps
 .PHONY: all
