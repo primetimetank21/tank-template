@@ -3,7 +3,7 @@
 # Variables
 DEV = 1
 VENV_NAME = .venv
-LINUX_REQUIREMENTS = requirements/apt_packages.txt
+# LINUX_REQUIREMENTS = requirements/apt_packages.txt
 REQUIREMENTS = requirements/common.txt
 COMMON_REQUIREMENTS = requirements/common.txt
 DEV_REQUIREMENTS = requirements/dev.txt
@@ -93,11 +93,11 @@ test: venv
 .PHONY: clean
 clean:
 	@ find . -type f -name "*.py[co]" -delete -o -type d -name "__pycache__" -delete
-	@ rm .coverage
 	@ dirs=".mypy_cache .pytest_cache .ruff_cache"; \
 	for dir in $$dirs; do \
 		rm -rf "$$dir"; \
-	done \
+	done
+	@ rm .coverage
 
 # Execute all steps
 .PHONY: all
