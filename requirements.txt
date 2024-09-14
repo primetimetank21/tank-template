@@ -1,5 +1,0 @@
-mypy
-ruff
-pytest
-mock
-pytest-cov
