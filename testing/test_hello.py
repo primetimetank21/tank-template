@@ -1,21 +1,29 @@
-"""Pytests for hello()"""
+"""Pytests for src/hello.py"""
+
 from typing import cast
-import hello
-import mock  # type:ignore
-from hello import hello as hello_func, main
+import pytest
+from src.hello import hello as hello_func, main
 
 
-def test_hello() -> None:
+@pytest.mark.parametrize(
+    "name, expected_output",
+    [
+        ("John", "Hello John!"),
+        ("Jill", "Hello Jill!"),
+        ("", "Hello John!"),
+        (None, "Hello John!"),
+    ],
+)
+def test_hello(name: str, expected_output: str) -> None:
     """Tests for `hello()`"""
-    assert hello_func() == "Hello John!"
-    assert hello_func("Jill") == "Hello Jill!"
-    assert hello_func(name="Jill") == "Hello Jill!"
-    assert isinstance(hello_func(), str)
+    assert all(
+        [
+            hello_func(name=name) == expected_output,
+            isinstance(hello_func(name=name), str),
+        ]
+    )
 
 
 def test_main() -> None:
-    with mock.patch.object(hello, attribute="main", return_value=None):
-        with mock.patch.object(hello, "__name__", "__main__"):
-            return_val = cast(None, main())
-
-            assert return_val is None
+    return_val: None = cast(None, main())
+    assert return_val is None

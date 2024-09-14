@@ -1,27 +1,52 @@
 .DEFAULT_GOAL := all
 
 # Variables
+DEV = 1
 VENV_NAME = .venv
+LINUX_REQUIREMENTS = requirements/apt_packages.txt
+REQUIREMENTS = requirements/common.txt
+COMMON_REQUIREMENTS = requirements/common.txt
+DEV_REQUIREMENTS = requirements/dev.txt
+
+ifeq ($(DEV), 1)
+    REQUIREMENTS = $(DEV_REQUIREMENTS)
+    VENV_NAME = .venv_dev
+else
+    REQUIREMENTS = $(COMMON_REQUIREMENTS)
+    VENV_NAME = .venv
+endif
+
 PIP = $(VENV_NAME)/bin/pip
 PYTHON = $(VENV_NAME)/bin/python
 RUFF = $(VENV_NAME)/bin/ruff
 MYPY = $(VENV_NAME)/bin/mypy
 PYTEST = $(VENV_NAME)/bin/pytest
 MUTE_OUTPUT = 1>/dev/null
+PYTHON_ENTRY_POINT = src/hello.py
 ALL_PYTHON_FILES := $$(git ls-files "*.py")
 ALL_iPYTHON_FILES := $$(git ls-files "*.ipynb")
 
+# .env variables
+ifneq (,$(wildcard ./.env))
+    include .env
+    export
+endif
+
 # Get dependencies
 .PHONY: install
-install: requirements.txt
+install: $(REQUIREMENTS)
 	@ chmod +x ./.github/add_github_hooks.sh && ./.github/add_github_hooks.sh
 	@ echo "Installing dependencies... [START]" && \
-	$(PIP) install --upgrade pip $(MUTE_OUTPUT) && $(PIP) install -r requirements.txt $(MUTE_OUTPUT) && \
+	$(PIP) install --upgrade pip      $(MUTE_OUTPUT) && \
+	$(PIP) install --upgrade wheel    $(MUTE_OUTPUT) && \
+	$(PIP) install -r $(REQUIREMENTS) $(MUTE_OUTPUT) && \
 	echo "Installing dependencies... [FINISHED]"
+#	echo $(SUDO_PASSWORD) | sudo -S apt-get install $$(cat $(LINUX_REQUIREMENTS)) $(MUTE_OUTPUT) && \
+	echo "Installing dependencies... [FINISHED]" # uncomment for Linux dependencies
 
 # Create/Activate env; install dependencies
 .PHONY: venv/bin/activate
-venv/bin/activate: requirements.txt
+venv/bin/activate: $(REQUIREMENTS)
 	@ python3 -m venv $(VENV_NAME) && \
 	chmod +x $(VENV_NAME)/bin/activate && \
 	. ./$(VENV_NAME)/bin/activate
@@ -39,8 +64,8 @@ delete_venv:
 
 # Run main script (remove if not needed)
 .PHONY: run 
-run: venv
-	@ $(PYTHON) hello.py
+run: venv $(PYTHON_ENTRY_POINT)
+	@ $(PYTHON) $(PYTHON_ENTRY_POINT)
 
 # Format code for consistency
 .PHONY: format
@@ -67,7 +92,12 @@ test: venv
 # Clean up and remove cache files
 .PHONY: clean
 clean:
-	find . -type f -name "*.py[co]" -delete -o -type d -name "__pycache__" -delete
+	@ find . -type f -name "*.py[co]" -delete -o -type d -name "__pycache__" -delete
+	@ rm .coverage
+	@ dirs=".mypy_cache .pytest_cache .ruff_cache"; \
+	for dir in $$dirs; do \
+		rm -rf "$$dir"; \
+	done \
 
 # Execute all steps
 .PHONY: all
