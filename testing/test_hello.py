@@ -1,4 +1,4 @@
-"""Pytests for src/hello.py"""
+"""Tests for src/hello.py"""
 
 from typing import cast
 import pytest
@@ -18,7 +18,6 @@ from src.hello import hello as hello_func, main
     ],
 )
 def test_hello(name: str, expected_output: str) -> None:
-    """Tests for `hello()`"""
     assert all(
         [
             hello_func(name=name) == expected_output,
