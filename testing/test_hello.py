@@ -12,6 +12,9 @@ from src.hello import hello as hello_func, main
         ("Jill", "Hello Jill!"),
         ("", "Hello John!"),
         (None, "Hello John!"),
+        (5, "Hello 5!"),
+        (5.0, "Hello 5.0!"),
+        (True, "Hello True!"),
     ],
 )
 def test_hello(name: str, expected_output: str) -> None:
