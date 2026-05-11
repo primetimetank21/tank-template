@@ -1,0 +1,7 @@
+ {
+   "name": "Your Repo Name",
+   "postCreateCommand": "git clone https://$HQ_CLONE_TOKEN@github.com/primetimetank21/clonewars-squad-hq.git /workspaces/clonewars-squad-hq; git clone https://github.com/primetimetank21/dev-setup.git /workspaces/dev-setup && /workspaces/dev-setup/setup.sh || true",
+   "remoteEnv": {
+     "SQUAD_HQ_ROOT": "/workspaces/clonewars-squad-hq"
+   }
+ }
