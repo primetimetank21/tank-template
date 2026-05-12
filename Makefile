@@ -6,10 +6,10 @@ VENV_NAME = .venv
 
 ifeq ($(DEV), 1)
     VENV_NAME = .venv_dev
-    PIP_INSTALL_EXTRAS = -e ".[dev]"
+    UV_SYNC_EXTRAS = --extra dev
 else
     VENV_NAME = .venv
-    PIP_INSTALL_EXTRAS = -e "."
+    UV_SYNC_EXTRAS =
 endif
 
 UV = uv
@@ -33,7 +33,7 @@ endif
 install:
 	@ chmod +x ./.github/add_github_hooks.sh && ./.github/add_github_hooks.sh
 	@ echo "Installing dependencies... [START]"
-	@ $(UV) pip install $(PIP_INSTALL_EXTRAS) $(MUTE_OUTPUT)
+	@ UV_PROJECT_ENVIRONMENT=$(VENV_NAME) $(UV) sync $(UV_SYNC_EXTRAS) $(MUTE_OUTPUT)
 	@ echo "Installing dependencies... [FINISHED]"
 
 # Create/Activate env; install dependencies
