@@ -1,8 +1,11 @@
 """Tests for src/hello.py"""
 
 from typing import cast
+
 import pytest
-from src.hello import hello as hello_func, main
+
+from src.hello import hello as hello_func
+from src.hello import main
 
 
 @pytest.mark.parametrize(
