@@ -28,7 +28,7 @@ target-version = "py311"
 select = ["E", "F", "I", "UP"]
 
 [tool.pytest.ini_options]
-testpaths = ["testing"]
+testpaths = ["tests"]
 addopts = "--cov=src --cov-report=term-missing"
 
 [tool.mypy]
@@ -37,7 +37,7 @@ strict = true
 ignore_missing_imports = true
 
 [[tool.mypy.overrides]]
-module = "testing.*"
+module = "tests.*"
 disallow_untyped_decorators = false
 
 [tool.coverage.run]

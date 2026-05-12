@@ -76,7 +76,7 @@ type-check: venv
 # Verify code behavior
 .PHONY: test
 test: venv
-	@ $(PYTEST) -vv --cov-report term-missing --cov=. testing/
+	@ $(PYTEST) -vv --cov-report term-missing --cov=. tests/
 
 # Clean up and remove cache files
 .PHONY: clean
