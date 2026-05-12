@@ -80,7 +80,7 @@ Write tests for any new features or bug fixes. Run tests with coverage reporting
 make test
 ```
 
-Tests should be placed in the `testing/` directory and follow the existing naming convention (`test_*.py`).
+Tests should be placed in the `tests/` directory and follow the existing naming convention (`test_*.py`).
 
 ## Pull Request Guidelines
 

@@ -58,7 +58,7 @@ Run the test suite with coverage reporting:
 make test
 ```
 
-Tests are located in the `testing/` directory.
+Tests are located in the `tests/` directory.
 
 ### Full development workflow
 
