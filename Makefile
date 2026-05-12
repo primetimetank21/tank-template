@@ -3,20 +3,16 @@
 # Variables
 DEV = 1
 VENV_NAME = .venv
-# LINUX_REQUIREMENTS = requirements/apt_packages.txt
-REQUIREMENTS = requirements/common.txt
-COMMON_REQUIREMENTS = requirements/common.txt
-DEV_REQUIREMENTS = requirements/dev.txt
 
 ifeq ($(DEV), 1)
-    REQUIREMENTS = $(DEV_REQUIREMENTS)
     VENV_NAME = .venv_dev
+    UV_SYNC_EXTRAS = --extra dev
 else
-    REQUIREMENTS = $(COMMON_REQUIREMENTS)
     VENV_NAME = .venv
+    UV_SYNC_EXTRAS =
 endif
 
-PIP = $(VENV_NAME)/bin/pip
+UV = uv
 PYTHON = $(VENV_NAME)/bin/python
 RUFF = $(VENV_NAME)/bin/ruff
 MYPY = $(VENV_NAME)/bin/mypy
@@ -34,28 +30,21 @@ endif
 
 # Get dependencies
 .PHONY: install
-install: $(REQUIREMENTS)
+install:
 	@ chmod +x ./.github/add_github_hooks.sh && ./.github/add_github_hooks.sh
-	@ echo "Installing dependencies... [START]" && \
-	$(PIP) install --upgrade pip      $(MUTE_OUTPUT) && \
-	$(PIP) install --upgrade wheel    $(MUTE_OUTPUT) && \
-	$(PIP) install -r $(REQUIREMENTS) $(MUTE_OUTPUT) && \
-	echo "Installing dependencies... [FINISHED]"
-#	echo $(SUDO_PASSWORD) | sudo -S apt-get install $$(cat $(LINUX_REQUIREMENTS)) $(MUTE_OUTPUT) && \
-	echo "Installing dependencies... [FINISHED]" # uncomment for Linux dependencies
+	@ echo "Installing dependencies... [START]"
+	@ UV_PROJECT_ENVIRONMENT=$(VENV_NAME) $(UV) sync $(UV_SYNC_EXTRAS) $(MUTE_OUTPUT)
+	@ echo "Installing dependencies... [FINISHED]"
 
 # Create/Activate env; install dependencies
 .PHONY: venv/bin/activate
-venv/bin/activate: $(REQUIREMENTS)
-	@ python3 -m venv $(VENV_NAME) && \
-	chmod +x $(VENV_NAME)/bin/activate && \
-	. ./$(VENV_NAME)/bin/activate
+venv/bin/activate:
+	@ test -d $(VENV_NAME) || $(UV) venv $(VENV_NAME)
 	@ make install -s
 
 # Activate env
 .PHONY: venv
 venv: venv/bin/activate
-	@ . ./$(VENV_NAME)/bin/activate
 
 # Delete env
 .PHONY: delete_venv
