@@ -39,7 +39,7 @@ install:
 # Create/Activate env; install dependencies
 .PHONY: venv/bin/activate
 venv/bin/activate:
-	@ $(UV) venv $(VENV_NAME)
+	@ test -d $(VENV_NAME) || $(UV) venv $(VENV_NAME)
 	@ make install -s
 
 # Activate env
