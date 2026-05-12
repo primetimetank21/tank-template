@@ -1,7 +1,5 @@
 """Tests for src/hello.py"""
 
-from typing import cast
-
 import pytest
 
 from src.hello import hello as hello_func
@@ -30,5 +28,4 @@ def test_hello(name: str, expected_output: str) -> None:
 
 
 def test_main() -> None:
-    return_val: None = cast(None, main())
-    assert return_val is None
+    main()

@@ -36,6 +36,10 @@ python_version = "3.11"
 strict = true
 ignore_missing_imports = true
 
+[[tool.mypy.overrides]]
+module = "testing.*"
+disallow_untyped_decorators = false
+
 [tool.coverage.run]
 source = ["src"]
 
