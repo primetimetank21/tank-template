@@ -31,7 +31,6 @@ endif
 # Get dependencies
 .PHONY: install
 install:
-	@ chmod +x ./.github/add_github_hooks.sh && ./.github/add_github_hooks.sh
 	@ echo "Installing dependencies... [START]"
 	@ UV_PROJECT_ENVIRONMENT=$(VENV_NAME) $(UV) sync $(UV_SYNC_EXTRAS) $(MUTE_OUTPUT)
 	@ echo "Installing dependencies... [FINISHED]"
